@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+
+<!-- 
+
+	Luis Moreno
+	WEBD 164
+	3/30/2021
+
+ -->
+
+<html>
+<head>
+	<title>TASK LIST APP</title>
+
+	<style type="text/css">
+
+		body {
+			font-family: Arial, sans-serif;
+		}
+
+		h2 {
+			background-color: #666;
+			color: #fff;
+			padding: 10px;
+		 }
+
+		 .header {
+		 	display: flex;
+		 	justify-content: space-between;
+		 	padding-left: 50px;
+		 	padding-right: 50px;
+		 }
+
+		 .add-task {
+		 	padding-left: 40px;
+		 }
+		
+
+		li {
+			list-style-type: none;
+		}
+
+	</style>
+
+</head>
+<body>
+
+	<div class="container"> <!-- start of container -->
+		<h2>TASK LIST APP</h2>
+
+		<div class="header"> <!-- start of header -->
+			
+			<div id="date"></div>	
+			<div class="clear">
+				<button type="submit" onclick="return clearTasks();">Clear Tasks</button>
+			</div>
+
+		</div> <!-- end of header -->
+		<br>
+		<div class="content"> <!-- start of content, contains input box and list -->
+			<div class="add-task">
+				<input type="text" id="input" placeholder="Add Task">			
+				<button type="submit" onclick="return addTask();">Add Tasks</button>
+			</div>
+
+			<div id="list">
+				
+			</div>
+
+		</div> <!-- end of content -->
+
+	</div> <!-- end of container -->
+
+	<script type="text/javascript">
+		// show current date
+			// request date
+			let today = new Date();
+			// request format
+			let options = {weekday:'long', month:'short', day:'numeric'};
+			// select element
+			const date = document.getElementById('date');
+			// display current date in div
+			date.innerHTML = today.toLocaleDateString('en-US', options);
+	
+		// display current tasks
+			// look for existing array
+			var myTasks = JSON.parse(localStorage.getItem('tasks'));
+			//check if array is empty
+			if (myTasks != null){
+				//if array is empty then diplay task in div as unordered list
+				taskLength = myTasks.length;
+				var text = "<ul>";
+				var i;
+				for (i = 0; i < taskLength; i++) {
+					text += '<li><button id="'+i+'" type="submit" onclick="return deleteTask();">Delete</button>'+ ' ' + myTasks[i] + '</li><br>';
+				}
+				text += "</ul>";
+				document.getElementById("list").innerHTML = text;
+			}
+				function deleteTask(){
+				var myTasks = JSON.parse(localStorage.getItem('tasks'));
+				let index = 0;
+				myTasks.splice(index, 1);
+				localStorage.setItem('tasks', JSON.stringify(myTasks));
+				location.reload();
+			}
+
+
+		// function to add task to local storage
+			function addTask() {
+				//look for an existing task array in local storage
+				var myTasks = JSON.parse(localStorage.getItem('tasks'));
+				// check if array is empty, if empty create an array
+				if (myTasks == null) {
+				myTasks = [];
+				}
+				// select value from  input
+				const input = document.getElementById('input');
+				var newTask = input.value;
+				// check if input box is empty
+				if(newTask){
+				// if not empty push input value to local storage array
+				myTasks.push(newTask);
+				localStorage.setItem('tasks', JSON.stringify(myTasks))	
+				}
+				// reset input box
+				input.value = "";
+				input.focus();
+				location.reload();
+
+				// automatically show/display tasks when added to local storage
+		
+			}
+
+		// function to clear the local storage
+			function clearTasks(){
+				// clear local storage
+				localStorage.clear();
+				// reload page
+				location.reload();
+		}
+		
+
+	</script>
+</body>
+</html>
